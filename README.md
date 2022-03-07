@@ -13,7 +13,7 @@ This backend uses Spring Boot and MongoDB.
 - **from postman**
   - `http://localhost:8080/api/v1` - the main entry point to the API
 - **from the browser**
-  - `http://localhost:8080/` - serves `/static/index.html`, it also contains the API documentation
+  - `http://localhost:8080/` - serves `/src/main/java/resources/static/index.html`, it also contains the API documentation
 
 # The API Documentation
 
