@@ -18,7 +18,7 @@ import java.util.List;
  * Provides core user information.
  *
  * Author: Erkam Guresen
- * */
+  */
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -30,6 +30,7 @@ public class AppUser implements UserDetails {
     private String id;
     private String firstName;
     private String lastName;
+    // In this application email is used as the username
     private String email;
     private String password;
     private List<AppUserRole> roles = new ArrayList<>();
@@ -104,7 +105,7 @@ public class AppUser implements UserDetails {
      */
     @Override
     public boolean isAccountNonExpired() {
-        //TODO
+        //TODO this feature is not added
         return true;
     }
 
@@ -123,7 +124,7 @@ public class AppUser implements UserDetails {
      */
     @Override
     public boolean isCredentialsNonExpired() {
-        //TODO
+        //TODO this feature is not added
         return true;
     }
 
