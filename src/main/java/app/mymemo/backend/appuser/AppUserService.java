@@ -99,20 +99,10 @@ public class AppUserService implements UserDetailsService {
         AppUser user = userRepository.findUserByEmail(email);
 
         AppUserRole role = Enum.valueOf(AppUserRole.class, roleName);
-        
-        // TODO check this        
-        boolean contains = false;
-//        for (AppUserRole userRole : AppUserRole.values()) {
-            if (user.getRoles().contains(role)) {
-                contains = true;
-//                break;
-            }
-//        }
-        
-        if (!contains) {
+
+        if (!user.getRoles().contains(role)) {
         	user.getRoles().add(role);
-        
-	        // TODO Check if we need this step
+
 	        userRepository.save(user);
 		}
 

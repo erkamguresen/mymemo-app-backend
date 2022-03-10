@@ -48,7 +48,7 @@ public class AppUserController {
             @PathVariable String id,
             @RequestBody RoleToUserForm form){
 
-        // TODO update wrt front end, it can be multiple chooses
+        // TODO update wrt front end, it can be multiple chooses add and delete together
 
         userService.addRoleToUser(form.getUsername(), form.getRoleName());
         return ResponseEntity.ok().build();
