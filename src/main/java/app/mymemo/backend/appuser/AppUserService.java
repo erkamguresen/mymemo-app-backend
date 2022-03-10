@@ -1,6 +1,7 @@
 package app.mymemo.backend.appuser;
 
 import app.mymemo.backend.exception.BadRequestException;
+import app.mymemo.backend.exception.UnauthorizedRequestException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -94,30 +95,37 @@ public class AppUserService implements UserDetailsService {
      * @param roleName name of the new role
      * @throws UsernameNotFoundException  if the user could not be found
      */
-    public void addRoleToUser(String email, String roleName) throws UsernameNotFoundException {
+    public void addRoleToUser(String id, String email, String roleName) throws UsernameNotFoundException {
 
         AppUser user = userRepository.findUserByEmail(email);
+
+        if (!user.getId().contentEquals(id))
+            throw new UnauthorizedRequestException();
 
         AppUserRole role = Enum.valueOf(AppUserRole.class, roleName);
 
         if (!user.getRoles().contains(role)) {
         	user.getRoles().add(role);
-
 	        userRepository.save(user);
 		}
-
     }
 
     /**
-     * Saves the new details of the existing user.
-     * @param user
-     * @return
+     * Saves the new details of the existing user
+     * @param id user id from path
+     * @param user app user from request body
+     * @return updated app user entity
      */
     public AppUser updateUser(String id, AppUser user){
+        // TODO check authorization wrt JWT
+        // TODO check id in the uri and the token id
+        if (!user.getId().contentEquals(id))
+            throw new UnauthorizedRequestException();
+
         AppUser existingUser = userRepository.findUserById(id);
+
         existingUser.updateAllowedPartsFromUserObject(user);
 
-        //TODO check id in the uri and the token id
         // TODO do not return the unnecessary details (password etc.)
         return userRepository.save(existingUser);
     }

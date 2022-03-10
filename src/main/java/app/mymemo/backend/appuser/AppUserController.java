@@ -42,15 +42,13 @@ public class AppUserController {
 
 //    @GetMapping("/{id}/roles")
 
-    // TODO Bug not working and I do not know why?
 	@PostMapping("/{id}/roles/add-role")
     public ResponseEntity<?> addRoleToAppUser(
             @PathVariable String id,
             @RequestBody RoleToUserForm form){
-
         // TODO update wrt front end, it can be multiple chooses add and delete together
 
-        userService.addRoleToUser(form.getUsername(), form.getRoleName());
+        userService.addRoleToUser(id, form.getUsername(), form.getRoleName());
         return ResponseEntity.ok().build();
     }
 
