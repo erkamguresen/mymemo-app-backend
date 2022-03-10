@@ -136,4 +136,17 @@ public class AppUser implements UserDetails {
     public boolean isEnabled() {
         return isAccountEnabled;
     }
+
+    public void updateAllowedPartsFromUserObject(AppUser updatedUser){
+
+        this.firstName = updatedUser.getFirstName();
+        this.lastName = updatedUser.getLastName();
+        // email and cannot be updated
+//        this.email = email;
+//        this.password = password;
+        //TODO check roles
+        this.roles = roles;
+        this.isAccountLocked = !updatedUser.isAccountNonLocked();
+        this.isAccountEnabled = updatedUser.isAccountEnabled();
+    }
 }

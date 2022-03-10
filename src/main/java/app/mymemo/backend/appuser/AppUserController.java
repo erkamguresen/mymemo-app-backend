@@ -32,24 +32,17 @@ public class AppUserController {
         return ResponseEntity.ok().body(userService.loadUserById(id));
     }
 	
-	
-	@PostMapping("/{id}/save")
-    public ResponseEntity<AppUser> saveAppUser(
+	// To update user data
+	@PostMapping("/{id}/update")
+    public ResponseEntity<AppUser> updateUser(
             @PathVariable String id,
             @RequestBody AppUser appUser){
-        // If it was a save/new record we could use created like this
-//        URI uri = URI.create(
-//                ServletUriComponentsBuilder.fromCurrentContextPath()
-//                        .path("/save").toUriString());
-//        return ResponseEntity.created(uri).body(userService.saveUser(appUser));
-
-        //TODO check id in the uri and the others
-        //TODO find from DB and check the id or non-changeable parts then change it
-        return ResponseEntity.ok().body(userService.saveUser(appUser));
+               return ResponseEntity.ok().body( userService.updateUser(id,appUser));
     }
 
 //    @GetMapping("/{id}/roles")
 
+    // TODO Bug not working and I do not know why?
 	@PostMapping("/{id}/roles/add-role")
     public ResponseEntity<?> addRoleToAppUser(
             @PathVariable String id,

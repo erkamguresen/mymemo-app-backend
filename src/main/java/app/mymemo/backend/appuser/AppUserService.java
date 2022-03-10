@@ -119,15 +119,17 @@ public class AppUserService implements UserDetailsService {
     }
 
     /**
-     * Saves the new details of the user.
+     * Saves the new details of the existing user.
      * @param user
      * @return
      */
-    public AppUser saveUser (AppUser user){
-        // TODO check new details User can not change Id and email (username)
-        // if thats the case return bad request
-        // TODO do not return the uncessery details (password etc.)
-        return userRepository.save(user);
+    public AppUser updateUser(String id, AppUser user){
+        AppUser existingUser = userRepository.findUserById(id);
+        existingUser.updateAllowedPartsFromUserObject(user);
+
+        //TODO check id in the uri and the token id
+        // TODO do not return the unnecessary details (password etc.)
+        return userRepository.save(existingUser);
     }
 
     /**
