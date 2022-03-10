@@ -1,15 +1,19 @@
 package app.mymemo.backend.appuser;
 
+import app.mymemo.backend.exception.BadRequestException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Provides core user service.
@@ -25,6 +29,8 @@ public class AppUserService implements UserDetailsService {
 
     @NonNull
     private final AppUserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//    private final ConfirmationTokenService confirmationTokenService;
 
     /**
      * Locates the user based on the email. In this implementation,
@@ -124,5 +130,40 @@ public class AppUserService implements UserDetailsService {
         // if thats the case return bad request
         // TODO do not return the uncessery details (password etc.)
         return userRepository.save(user);
+    }
+
+    /**
+     * Checks existing users and if the user does not exist creates a new user entity
+     * @param appUser signup details of new user creation request
+     * @return a confirmation token of registration
+     */
+    public String signUpUser(AppUser appUser){
+        boolean userExists = userRepository.findUserByEmail(appUser.getEmail()) != null
+                ?true
+                :false ;
+
+        if (userExists){
+            throw new BadRequestException("Email is already registered.");
+        }
+
+        // here is de encoded password
+        String encodedPassword =
+                bCryptPasswordEncoder.encode(appUser.getPassword());
+
+        appUser.setPassword(encodedPassword);
+        userRepository.save(appUser);
+
+        String token = UUID.randomUUID().toString();
+//        ConfirmationToken confirmationToken = new ConfirmationToken(
+//                token,
+//                LocalDateTime.now(),
+//                LocalDateTime.now().plusMinutes(15),
+//                appUser
+//        );
+//
+//        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        return token;
+
     }
 }
