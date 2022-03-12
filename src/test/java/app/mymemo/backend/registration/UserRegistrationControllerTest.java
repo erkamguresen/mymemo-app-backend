@@ -38,7 +38,7 @@ class UserRegistrationControllerTest {
     }
 
     @Test
-    void itShouldRegister() throws Exception {
+    void itCanRegisterANewAppUser() throws Exception {
         //given
         String url = "http://localhost:" + port + "/api/v1/registration";
 
@@ -61,7 +61,7 @@ class UserRegistrationControllerTest {
     }
 
     @Test
-    void itShouldReturn404WhenUserExistsRegister() throws Exception {
+    void itShouldReturn404WhenTryToRegisterAnExistingUser() throws Exception {
         //given
         String url = "http://localhost:" + port + "/api/v1/registration";
 

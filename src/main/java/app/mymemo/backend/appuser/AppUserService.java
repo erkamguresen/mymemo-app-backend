@@ -124,6 +124,9 @@ public class AppUserService implements UserDetailsService {
 
         AppUser existingUser = userRepository.findUserById(id);
 
+        if (existingUser == null)
+            throw new BadRequestException("User does not exist.");
+
         existingUser.updateAllowedPartsFromUserObject(user);
 
         // TODO do not return the unnecessary details (password etc.)
