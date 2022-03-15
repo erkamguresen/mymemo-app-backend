@@ -24,7 +24,6 @@ public interface AppUserRepository extends CrudRepository<AppUser, String> {
      * Retrieves an entity by its email.
      * @param email must not be null.
      * @return an  AppUser with the given username.
-
      */
     @Query("{ 'email' : ?0 }") //?0 is the input index, it is here the email
     AppUser findUserByEmail(String email);
@@ -33,7 +32,6 @@ public interface AppUserRepository extends CrudRepository<AppUser, String> {
      * Retrieves an entity by its id.
      * @param id must not be null.
      * @return an  AppUser with the given id.
-
      */
     @Query("{ 'id' : ?0 }") //?0 is the input index, it is here the email
     AppUser findUserById(String id);

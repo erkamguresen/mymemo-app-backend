@@ -183,7 +183,7 @@ class AppUserControllerTest {
     }
 
     @Test
-    void canUpdateAnExistingUserForAllowedProperties() throws Exception {
+    void itCanUpdateAnExistingUserForAllowedProperties() throws Exception {
         //given
         String url = "/api/v1/users/" + firstUser.getId()+ "/update";
 

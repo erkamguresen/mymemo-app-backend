@@ -1,15 +1,18 @@
 package app.mymemo.backend.security.config;
 
 import app.mymemo.backend.appuser.AppUserService;
+import app.mymemo.backend.security.filter.CustomAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -18,37 +21,31 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
-@AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final Environment environment;
+    private final String TOKEN_SECRET;
+
+    public WebSecurityConfig(AppUserService appUserService, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailsService, Environment environment) {
+        this.appUserService = appUserService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userDetailsService = userDetailsService;
+        this.environment = environment;
+        this.TOKEN_SECRET = this.environment.getProperty("TOKEN_SECRET");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        super.configure(http);
-
-//        http
-//                .csrf().disable()
-//                .authorizeRequests().antMatchers("/api/v*/registration/**")
-//                .permitAll()
-//                .anyRequest().authenticated().and().formLogin();
-
-//        http
-//                .csrf().disable()
-//                .authorizeRequests().antMatchers("/api/v*/registration/**","/api/v*/users/**")
-//                .permitAll()
-//                .anyRequest().authenticated().and().formLogin();
 
         // To change login place from CustomAuthenticationFilter which extends
         // UsernamePasswordAuthenticationFilter which extends AbstractAuthenticationProcessingFilter
-
-// TODO
-//        CustomAuthenticationFilter customAuthenticationFilter =
-//                new CustomAuthenticationFilter(authenticationManagerBean());
-//        customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
+        CustomAuthenticationFilter customAuthenticationFilter =
+                new CustomAuthenticationFilter(authenticationManagerBean(),TOKEN_SECRET);
+        customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
 
 
         /**
