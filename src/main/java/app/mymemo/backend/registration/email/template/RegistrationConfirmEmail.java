@@ -3,7 +3,11 @@ package app.mymemo.backend.registration.email.template;
 public class RegistrationConfirmEmail {
 
     public static String buildRegistrationConfirmEmail(String name, String link){
-        return " <div\n" +
+        // Make first Char Uppercase and the rest lowercase
+        name = name.toLowerCase();
+        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+
+        return "<div\n" +
                 "      style=\"\n" +
                 "        background-color: #f4f4f4;\n" +
                 "        margin: 0 !important;\n" +
@@ -24,8 +28,7 @@ public class RegistrationConfirmEmail {
                 "          overflow: hidden;\n" +
                 "        \"\n" +
                 "      >\n" +
-                "        We're thrilled to have you here! Get ready to dive into your new\n" +
-                "        account.\n" +
+                ""+
                 "      </div>\n" +
                 "      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
                 "        <!-- LOGO -->\n" +
@@ -42,7 +45,7 @@ public class RegistrationConfirmEmail {
                 "                <td\n" +
                 "                  align=\"center\"\n" +
                 "                  valign=\"top\"\n" +
-                "                  style=\"padding: 40px 10px 40px 10px\"\n" +
+                "                  style=\"padding: 20px 10px 20px 10px\"\n" +
                 "                ></td>\n" +
                 "              </tr>\n" +
                 "            </table>\n" +
@@ -71,15 +74,13 @@ public class RegistrationConfirmEmail {
                 "                    border-radius: 4px 4px 0px 0px;\n" +
                 "                    color: #111111;\n" +
                 "                    font-family: 'Lato', Helvetica, Arial, sans-serif;\n" +
-                "                    font-size: 48px;\n" +
+                "                    font-size: 16px;\n" +
                 "                    font-weight: 400;\n" +
                 "                    letter-spacing: 4px;\n" +
-                "                    line-height: 48px;\n" +
+                "                    line-height: 16px;\n" +
                 "                  \"\n" +
                 "                >\n" +
-                "                  <h1 style=\"font-size: 48px; font-weight: 400; margin: 2\">\n" +
-                "                    Welcome to\n" +
-                "                  </h1>\n" +
+                "                  <h1 style=\"font-size: 24px; font-weight: 400\">Welcome to</h1>\n" +
                 "\n" +
                 "                  <img\n" +
                 "                    src=\"https://www.mymemo.app/logo.fw.png\"\n" +
@@ -92,26 +93,16 @@ public class RegistrationConfirmEmail {
                 "                      margin-right: auto;\n" +
                 "                    \"\n" +
                 "                  />\n" +
-                "                  <h2 style=\"font-size: 36px; font-weight: 400; margin: 2\">\n" +
+                "                  <h2 style=\"font-size: 20px; font-weight: 400\">\n" +
                 "                    My Memo App !\n" +
                 "                  </h2>\n" +
-                "                  <!-- <img\n" +
-                "                  src=\" https://img.icons8.com/clouds/100/000000/handshake.png\"\n" +
-                "                  width=\"125\"\n" +
-                "                  height=\"120\"\n" +
-                "                  style=\"display: block; border: 0px\"\n" +
-                "                /> -->\n" +
                 "                </td>\n" +
                 "              </tr>\n" +
                 "            </table>\n" +
                 "          </td>\n" +
                 "        </tr>\n" +
                 "        <tr>\n" +
-                "          <td\n" +
-                "            bgcolor=\"#f4f4f4\"\n" +
-                "            align=\"center\"\n" +
-                "            style=\"padding: 0px 10px 0px 10px\"\n" +
-                "          >\n" +
+                "          <td bgcolor=\"#f4f4f4\" align=\"center\" style=\"padding: 0px 5px 0px 5px\">\n" +
                 "            <table\n" +
                 "              border=\"0\"\n" +
                 "              cellpadding=\"0\"\n" +
@@ -124,15 +115,17 @@ public class RegistrationConfirmEmail {
                 "                  bgcolor=\"#ffffff\"\n" +
                 "                  align=\"left\"\n" +
                 "                  style=\"\n" +
-                "                    padding: 20px 30px 40px 30px;\n" +
+                "                    padding: 10px 30px 20px 30px;\n" +
                 "                    color: #666666;\n" +
                 "                    font-family: 'Lato', Helvetica, Arial, sans-serif;\n" +
-                "                    font-size: 18px;\n" +
+                "                    font-size: 16px;\n" +
                 "                    font-weight: 400;\n" +
-                "                    line-height: 25px;\n" +
+                "                    line-height: 20px;\n" +
                 "                  \"\n" +
                 "                >\n" +
-                "                  <p style=\"margin: 0\">Hello "+ name +",</p>\n" +
+                "                  <p style=\"margin: 0\">Hello "
+                + name +
+                ",</p>\n" +
                 "                  <p></p>\n" +
                 "                  <p style=\"margin: 0\">\n" +
                 "                    We're excited to have you get started. First, you need to\n" +
@@ -153,7 +146,7 @@ public class RegistrationConfirmEmail {
                 "                      <td\n" +
                 "                        bgcolor=\"#ffffff\"\n" +
                 "                        align=\"center\"\n" +
-                "                        style=\"padding: 20px 30px 60px 30px\"\n" +
+                "                        style=\"padding: 10px 30px 20px 30px\"\n" +
                 "                      >\n" +
                 "                        <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
                 "                          <tr>\n" +
@@ -163,7 +156,9 @@ public class RegistrationConfirmEmail {
                 "                              bgcolor=\"#0A22CC\"\n" +
                 "                            >\n" +
                 "                              <a\n" +
-                "                                href=\""+ link +"\"\n" +
+                "                                href=\""
+                + link +
+                "\"\n" +
                 "                                target=\"_blank\"\n" +
                 "                                style=\"\n" +
                 "                                  font-size: 20px;\n" +
@@ -196,9 +191,9 @@ public class RegistrationConfirmEmail {
                 "                    padding: 0px 30px 0px 30px;\n" +
                 "                    color: #666666;\n" +
                 "                    font-family: 'Lato', Helvetica, Arial, sans-serif;\n" +
-                "                    font-size: 18px;\n" +
+                "                    font-size: 16px;\n" +
                 "                    font-weight: 400;\n" +
-                "                    line-height: 25px;\n" +
+                "                    line-height: 20px;\n" +
                 "                  \"\n" +
                 "                >\n" +
                 "                  <p style=\"margin: 0\">\n" +
@@ -213,17 +208,21 @@ public class RegistrationConfirmEmail {
                 "                  bgcolor=\"#ffffff\"\n" +
                 "                  align=\"left\"\n" +
                 "                  style=\"\n" +
-                "                    padding: 20px 30px 20px 30px;\n" +
+                "                    padding: 10px 30px 10px 30px;\n" +
                 "                    color: #666666;\n" +
                 "                    font-family: 'Lato', Helvetica, Arial, sans-serif;\n" +
-                "                    font-size: 18px;\n" +
+                "                    font-size: 16px;\n" +
                 "                    font-weight: 400;\n" +
-                "                    line-height: 25px;\n" +
+                "                    line-height: 20px;\n" +
                 "                  \"\n" +
                 "                >\n" +
                 "                  <p style=\"margin: 0\">\n" +
-                "                    <a href=\""+ link +"\" target=\"_blank\" style=\"color: #0a22cc\"\n" +
-                "                      >"+ link +"</a\n" +
+                "                    <a href=\""
+                + link +
+                "\" target=\"_blank\" style=\"color: #0a22cc\"\n" +
+                "                      >"
+                + link +
+                "</a\n" +
                 "                    >\n" +
                 "                  </p>\n" +
                 "                </td>\n" +
@@ -233,12 +232,12 @@ public class RegistrationConfirmEmail {
                 "                  bgcolor=\"#ffffff\"\n" +
                 "                  align=\"left\"\n" +
                 "                  style=\"\n" +
-                "                    padding: 0px 30px 20px 30px;\n" +
+                "                    padding: 0px 30px 10px 30px;\n" +
                 "                    color: #666666;\n" +
                 "                    font-family: 'Lato', Helvetica, Arial, sans-serif;\n" +
-                "                    font-size: 18px;\n" +
+                "                    font-size: 16px;\n" +
                 "                    font-weight: 400;\n" +
-                "                    line-height: 25px;\n" +
+                "                    line-height: 20px;\n" +
                 "                  \"\n" +
                 "                >\n" +
                 "                  <p style=\"margin: 0\">\n" +
@@ -252,13 +251,13 @@ public class RegistrationConfirmEmail {
                 "                  bgcolor=\"#ffffff\"\n" +
                 "                  align=\"left\"\n" +
                 "                  style=\"\n" +
-                "                    padding: 0px 30px 40px 30px;\n" +
+                "                    padding: 10px 30px 20px 30px;\n" +
                 "                    border-radius: 0px 0px 4px 4px;\n" +
                 "                    color: #666666;\n" +
                 "                    font-family: 'Lato', Helvetica, Arial, sans-serif;\n" +
-                "                    font-size: 18px;\n" +
+                "                    font-size: 16px;\n" +
                 "                    font-weight: 400;\n" +
-                "                    line-height: 25px;\n" +
+                "                    line-height: 20px;\n" +
                 "                  \"\n" +
                 "                >\n" +
                 "                  <p style=\"margin: 0\">Cheers,<br />My Memo App Team</p>\n" +
@@ -271,7 +270,7 @@ public class RegistrationConfirmEmail {
                 "          <td\n" +
                 "            bgcolor=\"#f4f4f4\"\n" +
                 "            align=\"center\"\n" +
-                "            style=\"padding: 30px 10px 0px 10px\"\n" +
+                "            style=\"padding: 10px 10px 0px 10px\"\n" +
                 "          >\n" +
                 "            <table\n" +
                 "              border=\"0\"\n" +

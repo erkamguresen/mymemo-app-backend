@@ -28,7 +28,7 @@ public class EmailService implements EmailSender{
     @Override
     @Async
     public void sendEmailConfirm(String toWho, String emailBody)  {
-        send(toWho, "Confirm Your Email", emailBody);
+        send(toWho, "Confirm Your Email For Registration", emailBody);
     }
 
     @Override

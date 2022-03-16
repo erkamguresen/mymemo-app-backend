@@ -25,7 +25,7 @@ public class SendGridEmailService implements EmailSender{
     public void sendEmailConfirm(String toWho, String emailBody) {
         send(
                 toWho,
-                "Confirm Your Email",
+                "Confirm Your Email For MyMemo .App Registration",
                 emailBody
         );
     }
