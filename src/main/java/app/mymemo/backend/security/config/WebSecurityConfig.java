@@ -66,8 +66,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/v*/registration/**",
                 "/api/v*/login/**", "/api/v*/token/refresh/**").permitAll();
 
-        http.authorizeRequests().antMatchers(GET, "/api/v1/users/**").hasAnyAuthority("USER");
-        http.authorizeRequests().antMatchers(POST, "/api/users/save/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests()
+                .antMatchers(GET, "/api/v1/users/**")
+                .hasAnyAuthority("APP_USER_ROLE");
+
+        // TODO for role based authorization prepare appAdmin service & routes
+        http.authorizeRequests()
+                .antMatchers(POST, "/api/v1/admin/**")
+                .hasAnyAuthority("APP_ADMIN_ROLE");
+
+        // TODO for role based authorization prepare appSuperAdmin service & routes
+        http.authorizeRequests()
+                .antMatchers(POST, "/api/v1/super-admin/**")
+                .hasAnyAuthority("APP_SUPER_ADMIN_ROLE");
 
         // Allow everyone to access this app
 //        http.authorizeRequests().anyRequest().permitAll();
@@ -85,10 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        super.configure(auth);
-//        // here we pass de password encoder to userdetials service
-//        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-
+        // here we pass de password encoder and userdetials service
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

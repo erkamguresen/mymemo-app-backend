@@ -1,6 +1,7 @@
 package app.mymemo.backend.appuser;
 
 import app.mymemo.backend.exception.UnauthorizedRequestException;
+import app.mymemo.backend.registration.token.ConfirmationTokenService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,11 +28,16 @@ class AppUserServiceTest {
 
     @Mock
     private AppUserRepository appUserRepository;
+    @Mock
+    private ConfirmationTokenService confirmationTokenService;
     private AppUserService testService;
 
     @BeforeEach
     void setUp() {
-        testService = new AppUserService(appUserRepository, new BCryptPasswordEncoder());
+        testService = new AppUserService(
+                appUserRepository,
+                new BCryptPasswordEncoder(),
+                confirmationTokenService);
     }
 
     @AfterEach

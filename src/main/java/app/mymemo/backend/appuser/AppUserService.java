@@ -2,14 +2,19 @@ package app.mymemo.backend.appuser;
 
 import app.mymemo.backend.exception.BadRequestException;
 import app.mymemo.backend.exception.UnauthorizedRequestException;
+import app.mymemo.backend.registration.token.ConfirmationToken;
+import app.mymemo.backend.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +25,7 @@ import java.util.UUID;
  * Author: Erkam Guresen
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppUserService implements UserDetailsService {
 
     private static String USER_NOT_FOUND_MESSAGE =
@@ -29,7 +34,7 @@ public class AppUserService implements UserDetailsService {
     @NonNull
     private final AppUserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    private final ConfirmationTokenService confirmationTokenService;
+    private final ConfirmationTokenService confirmationTokenService;
 
     /**
      * Locates the user based on the email. In this implementation,
@@ -139,12 +144,31 @@ public class AppUserService implements UserDetailsService {
      * @return a confirmation token of registration
      */
     public String signUpUser(AppUser appUser){
-        boolean userExists = userRepository.findUserByEmail(appUser.getEmail()) != null
-                ?true
-                :false ;
+        AppUser user = userRepository.findUserByEmail(appUser.getEmail());
 
-        if (userExists){
-            throw new BadRequestException("Email is already registered.");
+
+        if (user != null ){
+            if (user.isAccountEnabled()){
+                throw new BadRequestException("Email is already registered.");
+
+            } else {
+                /*
+                * if the user registered but not activated (enabled the account
+                * by clicking the link in the confirmation email) the account
+                */
+                String encodedPassword =
+                        bCryptPasswordEncoder.encode(appUser.getPassword());
+
+                user.setPassword(encodedPassword);
+                userRepository.save(user);
+
+                String token = UUID.randomUUID().toString();
+
+                confirmationTokenService
+                        .saveConfirmationToken(getConfirmationToken(token, user));
+
+                return token;
+            }
         }
 
         // here is de encoded password
@@ -155,16 +179,30 @@ public class AppUserService implements UserDetailsService {
         userRepository.save(appUser);
 
         String token = UUID.randomUUID().toString();
-//        ConfirmationToken confirmationToken = new ConfirmationToken(
-//                token,
-//                LocalDateTime.now(),
-//                LocalDateTime.now().plusMinutes(15),
-//                appUser
-//        );
-//
-//        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        confirmationTokenService
+                .saveConfirmationToken(getConfirmationToken(token, appUser));
 
         return token;
 
+    }
+
+    /**
+     * Takes a token string and returns a confirmation token which will expire
+     * in 15 minutes.
+     *
+     * @param token token to be used in confirmation token
+     * @param appUser the user for whom the token will be created.
+     * @return a confirmation token which will expire in 15 minutes
+     */
+    private ConfirmationToken getConfirmationToken(String token, AppUser appUser){
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                appUser
+        );
+
+        return confirmationToken;
     }
 }
