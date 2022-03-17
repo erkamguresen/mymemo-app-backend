@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,13 +22,31 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides Custom Authentication Filter.
+ *
+ * Author: Erkam Guresen
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final String TOKEN_SECRET;
 
-    // This method will intercept every request that comes to the app
+    /**
+     * This method will intercept every request that comes to the app.
+     *
+     * @param request the incoming request.
+     * @param response the response that will be returned.
+     * @param filterChain An object provided by the servlet container
+     *                    to the developer giving a view into the
+     *                    invocation chain of a filtered request
+     *                    for a resource. This will be used
+     *                    to invoke the next filter in the chain.
+     * @throws ServletException – in case of errors.
+     * @throws IOException - if an I/O error occurs during the processing
+     * of the request.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().equals("/api/v1/login")

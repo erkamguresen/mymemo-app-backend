@@ -1,7 +1,26 @@
 package app.mymemo.backend.registration.email.template;
 
+/**
+ * Provides an email template to be used after registration.
+ * The email contains an email(account) confirmation link
+ * containing confirmation token.
+ *
+ * Author: Erkam Guresen
+ */
 public class RegistrationConfirmEmail {
 
+    /**
+     * Provides an email template to be used after registration.
+     *  The email contains an email(or account) confirmation link
+     *  containing confirmation token.
+     *
+     * @param name Name of the user. It is used to hail the user.
+     * @param link the active confirmation link, which will be clicked to
+     *             confirm the email (or account), contains the confirmation
+     *             token as url parameter.
+     * @return a email body with a hail to the name and an active email
+     * (or account) confirmation link inside it.
+     */
     public static String buildRegistrationConfirmEmail(String name, String link){
         // Make first Char Uppercase and the rest lowercase
         name = name.toLowerCase();

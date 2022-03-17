@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Provides app user registration service.
+ *
+ * Author: Erkam Guresen
+ */
 @Service
 @AllArgsConstructor
 public class RegistrationService {
@@ -30,9 +35,9 @@ public class RegistrationService {
 
 
     /**
-     * Registers a new user with a default role as "APP_USER_ROLE"
-     * @param request registration request from client
-     * @return a confirmation token of registration
+     * Registers a new user with a default role as "APP_USER_ROLE".
+     * @param request registration request from client.
+     * @return a confirmation token of registration.
      */
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
@@ -55,8 +60,6 @@ public class RegistrationService {
                 )
         );
 
-//        System.out.println(environment.getProperty("web.mail.confirm-link"));
-
         emailSender.sendEmailConfirm(
                 request.getEmail(),
                 RegistrationConfirmEmail.buildRegistrationConfirmEmail(request.getFirstName(),
@@ -66,8 +69,14 @@ public class RegistrationService {
         return token;
     }
 
+    /**
+     * Confirms that an app user has access to the registered email account.
+     * @param token unique token to confirm the email address.
+     * @return "confirmed" if token is valid.
+     * @throws BadRequestException
+     */
     @Transactional
-    public String confirmToken(String token) throws IllegalStateException{
+    public String confirmToken(String token) throws BadRequestException{
 
         Optional<ConfirmationToken> confirmationTokenOptional =
                 confirmationTokenService.getToken(token);

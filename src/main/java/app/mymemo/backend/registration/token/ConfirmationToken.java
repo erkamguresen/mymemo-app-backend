@@ -7,9 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDateTime;
 
+/**
+ * Provides core Confirmation Token.
+ * It is not specific to email conformation.
+ *
+ * Author: Erkam Guresen
+ */
 @Document
 @Data
 @NoArgsConstructor
@@ -27,6 +32,14 @@ public class ConfirmationToken {
 
     private AppUser appUser;
 
+    /**
+     * Basic constructor for conformation
+     *
+     * @param token the token value of the confirmation token.
+     * @param createdAt creation time stamp for the token.
+     * @param expiresAt expiration time  for the token.
+     * @param appUser the user for whom the token is created.
+     */
     public ConfirmationToken(
             String token,
             LocalDateTime createdAt,

@@ -26,20 +26,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-//To log use
+/**
+ * Provides Custom Authentication Filter.
+ *
+ * Author: Erkam Guresen
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter  {
     private final AuthenticationManager authenticationManager;
     private final String TOKEN_SECRET;
 
+    /**
+     * Performs actual authentication.
+     *
+     * @param request from which to extract parameters and perform the authentication.
+     * @param response the response, which may be needed if the implementation has to do a redirect as part of a
+     *                 multi-stage authentication process (such as OpenID).
+     * @return the authenticated user token, or null if authentication is incomplete.
+     * @throws AuthenticationException - if the authentication process fails
+     */
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws AuthenticationException {
-//        return super.attemptAuthentication(request, response);
          String username = request.getParameter("username");
          String password = request.getParameter("password");
          log.info("Username is: {}", username);
@@ -51,6 +62,21 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         return authenticationManager.authenticate(authenticationToken);
     }
 
+    /**
+     * Default behaviour for successful authentication.
+     *
+     * @param request the incoming request.
+     * @param response the response that will be returned.
+     * @param chain An object provided by the servlet container
+     *                    to the developer giving a view into the
+     *                    invocation chain of a filtered request
+     *                    for a resource. This will be used
+     *                    to invoke the next filter in the chain
+     * @param authentication  the object returned from the attemptAuthentication method.
+     * @throws IOException - if an I/O error occurs during the processing
+     * of the request.
+     * @throws ServletException - if a servlet encounters difficulty.
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
