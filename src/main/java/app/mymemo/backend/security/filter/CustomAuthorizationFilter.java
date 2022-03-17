@@ -73,7 +73,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     System.out.printf("Algorithm of JWT Header is: %s%n", jwtHeader.get("alg"));
                     System.out.printf("Type of JWT Header is: %s%n", jwtHeader.get("typ"));
 
-
                     String secretKey = this.TOKEN_SECRET;
                     Algorithm algorithm ;
                     String s =jwtHeader.get("alg").toString();
@@ -96,7 +95,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                         algorithm =Algorithm.HMAC384(secretKey);
                             break;
                     }
-
 
                     JWTVerifier jwtVerifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = jwtVerifier.verify(token);

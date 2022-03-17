@@ -95,7 +95,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60*60*1000))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles",
-                        user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                        user.getAuthorities().stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
+                .withClaim("userId",user.getId())
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
@@ -106,8 +109,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 // here I used a more complex algorithm
 //                .sign(Algorithm.HMAC512(this.environment.getProperty("TOKEN_SECRET")));
                 .sign(Algorithm.HMAC512("TOKEN_SECRET"));
-
-
 
 /* //send in body instead of headers
         response.setHeader("access_token", access_token);

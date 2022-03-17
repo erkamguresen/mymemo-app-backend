@@ -3,6 +3,7 @@ package app.mymemo.backend.appuser;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Enumeration;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -27,7 +30,11 @@ public class AppUserController {
     }
 	
 	@GetMapping("/{id}")
-    public ResponseEntity<UserDetails> getUser(@PathVariable String id){
+    public ResponseEntity<UserDetails> getUser(HttpServletRequest request,
+            @PathVariable String id){
+
+//        Enumeration<String> token = request.getHeaderNames();
+        String token = request.getHeader("authorization");
 
         return ResponseEntity.ok().body(userService.loadUserById(id));
     }

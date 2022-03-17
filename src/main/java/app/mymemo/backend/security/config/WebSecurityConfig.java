@@ -2,6 +2,7 @@ package app.mymemo.backend.security.config;
 
 import app.mymemo.backend.appuser.AppUserService;
 import app.mymemo.backend.security.filter.CustomAuthenticationFilter;
+import app.mymemo.backend.security.filter.CustomAuthorizationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //permit the following
         http.authorizeRequests().antMatchers(
                 //TODO
-                "/api/v*/users/**",
+//                "/api/v*/users/**",
                 "/api/v*/registration/**",
                 "/api/v*/login/**", "/api/v*/token/refresh/**").permitAll();
 
@@ -93,10 +94,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //Auth filter to check login
 //        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
 // TODO
-//        http.addFilter(customAuthenticationFilter);
+        http.addFilter(customAuthenticationFilter);
 
         // TODO use before to intercept every request
-//        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(TOKEN_SECRET), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
