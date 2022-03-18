@@ -42,44 +42,6 @@ public class TokenRefreshController {
             String refresh_token = authorizationHeader.substring("Bearer ".length());
 
             try {
-                // TODO Refactor this part it is repeating and too long
-                // https://www.baeldung.com/java-jwt-token-decode to get algorithm name
-//                String[] tokenChunks = refresh_token.split("\\.");
-//                Base64.Decoder decoder = Base64.getUrlDecoder();
-//
-//                String header = new String(decoder.decode(tokenChunks[0]));
-//                String payload = new String(decoder.decode(tokenChunks[1]));
-//
-//                JSONObject jwtHeader = new JSONObject(header);
-//
-//
-//
-//                String secretKey = "secret";
-//                Algorithm algorithm ;
-//                String s =jwtHeader.get("alg").toString();
-//
-//                // in the token it is not HMAC but HS?
-//                //TODO check typ and put inside try?
-//                switch (jwtHeader.get("alg").toString()) {
-//                    case "HS256":
-//                    case "HMAC256":
-//                        algorithm = Algorithm.HMAC256(secretKey);
-//                        break;
-//                    case "HMAC512":
-//                    case "HS512":
-//                        algorithm = Algorithm.HMAC512(secretKey);
-//                        break;
-//                    case "HMAC384":
-//                    case "HS384":
-//                    default:
-//                        algorithm =Algorithm.HMAC384(secretKey);
-//                        break;
-//                }
-//
-//
-//                JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-//                DecodedJWT decodedJWT = jwtVerifier.verify(refresh_token);
-
                 String secretKey = this.environment.getProperty("TOKEN_SECRET");
 
                 DecodedJWT decodedJWT = DecodedJWTAccessToken

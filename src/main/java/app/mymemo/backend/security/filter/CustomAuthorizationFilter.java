@@ -1,14 +1,10 @@
 package app.mymemo.backend.security.filter;
 
 import app.mymemo.backend.security.DecodedJWTAccessToken;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,7 +47,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().equals("/api/v1/login")
-                || request.getServletPath().equals("/api/v1/token/refresh" )){
+                || request.getServletPath().equals("/api/v1/login/token/refresh" )){
             filterChain.doFilter(request,response);
         } else {
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -59,47 +55,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 //                String token = authorizationHeader.substring("Bearer ".length());
 
                 try {
-                    // TODO Refactor this part it is repeating and too long
-                    // https://www.baeldung.com/java-jwt-token-decode to get algorithm name
-//                    String[] tokenChunks = token.split("\\.");
-//                    Base64.Decoder decoder = Base64.getUrlDecoder();
-//
-//                    String header = new String(decoder.decode(tokenChunks[0]));
-//                    String payload = new String(decoder.decode(tokenChunks[1]));
-//                    log.info("First Part of JWT is: {}", header);
-//                    log.info("Second Part of JWT is: {}", payload);
-//
-//                    JSONObject jwtHeader = new JSONObject(header);
-//
-//                    System.out.printf("Algorithm of JWT Header is: %s%n", jwtHeader.get("alg"));
-//                    System.out.printf("Type of JWT Header is: %s%n", jwtHeader.get("typ"));
-//
-//                    String secretKey = this.TOKEN_SECRET;
-//                    Algorithm algorithm ;
-//                    String s =jwtHeader.get("alg").toString();
-//
-//                    /* in the token it is not HMAC but HS (they are same) */
-//
-//                    //TODO check typ and put inside try?
-//                    switch (jwtHeader.get("alg").toString()) {
-//                        case "HS256":
-//                        case "HMAC256":
-//                            algorithm = Algorithm.HMAC256(secretKey);
-//                            break;
-//                        case "HMAC512":
-//                        case "HS512":
-//                            algorithm = Algorithm.HMAC512(secretKey);
-//                            break;
-//                        case "HMAC384":
-//                        case "HS384":
-//                        default:
-//                        algorithm =Algorithm.HMAC384(secretKey);
-//                            break;
-//                    }
-//
-//                    JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-//                    DecodedJWT decodedJWT = jwtVerifier.verify(token);
-
                     DecodedJWT decodedJWT = DecodedJWTAccessToken
                             .getVerifiedDecodedJWT(
                                     authorizationHeader,
