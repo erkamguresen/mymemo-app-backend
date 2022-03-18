@@ -46,7 +46,7 @@ class RegistrationServiceTest {
         RegistrationRequest registrationRequest = new RegistrationRequest(
                 "John",
                 "Doe",
-                "johndoe@gmail.com",
+                "admin@mymemo.app",
                 "password"
         );
 
@@ -114,7 +114,7 @@ class RegistrationServiceTest {
         RegistrationRequest registrationRequest = new RegistrationRequest(
                 "John",
                 "Doe",
-                "johndoe@gmail.com",
+                "admin@mymemo.app",
                 "password"
         );
 
@@ -151,7 +151,7 @@ class RegistrationServiceTest {
         RegistrationRequest registrationRequest = new RegistrationRequest(
                 "John",
                 "Doe",
-                "johndoe@gmail.com",
+                "admin@mymemo.app",
                 "password"
         );
 
@@ -175,7 +175,7 @@ class RegistrationServiceTest {
         RegistrationRequest registrationRequest = new RegistrationRequest(
                 "John",
                 "Doe",
-                "johndoe@gmail.com",
+                "admin@mymemo.app",
                 "password"
         );
 

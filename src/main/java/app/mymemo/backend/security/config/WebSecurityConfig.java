@@ -27,6 +27,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
  * Author: Erkam Guresen
  */
 @Configuration
+@AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -34,15 +35,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserDetailsService userDetailsService;
     private final Environment environment;
-    private final String TOKEN_SECRET;
+//    private String TOKEN_SECRET;
 
-    public WebSecurityConfig(AppUserService appUserService, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailsService, Environment environment) {
-        this.appUserService = appUserService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.userDetailsService = userDetailsService;
-        this.environment = environment;
-        this.TOKEN_SECRET = this.environment.getProperty("TOKEN_SECRET");
-    }
+//    public WebSecurityConfig(AppUserService appUserService, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailsService, Environment environment) {
+//        this.appUserService = appUserService;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//        this.userDetailsService = userDetailsService;
+//        this.environment = environment;
+//        this.TOKEN_SECRET = this.environment.getProperty("TOKEN_SECRET");
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -50,7 +51,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // To change login place from CustomAuthenticationFilter which extends
         // UsernamePasswordAuthenticationFilter which extends AbstractAuthenticationProcessingFilter
         CustomAuthenticationFilter customAuthenticationFilter =
-                new CustomAuthenticationFilter(authenticationManagerBean(),TOKEN_SECRET);
+                new CustomAuthenticationFilter(
+                        authenticationManagerBean(),
+                        this.environment.getProperty("TOKEN_SECRET"));
+
         customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
 
 
@@ -70,7 +74,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //TODO
 //                "/api/v*/users/**",
                 "/api/v*/registration/**",
-                "/api/v*/login/**", "/api/v*/token/refresh/**").permitAll();
+                "/api/v*/login/**",
+                "/api/v*/token/refresh/**")
+                .permitAll();
 
         http.authorizeRequests()
                 .antMatchers(GET, "/api/v1/users/**")
@@ -97,7 +103,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilter(customAuthenticationFilter);
 
         // TODO use before to intercept every request
-        http.addFilterBefore(new CustomAuthorizationFilter(TOKEN_SECRET), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(
+                this.environment.getProperty("TOKEN_SECRET")
+                ),
+                UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

@@ -30,7 +30,7 @@ class SendGridEmailServiceTest {
 
         //when
         sendGridEmailService.sendEmailConfirm(
-                "jhondoe@gmail.com",
+                "admin@mymemo.app",
                 "Hello Jhon"
         );
 
@@ -45,7 +45,7 @@ class SendGridEmailServiceTest {
 
         //when
         sendGridEmailService.send(
-                "jhondoe@gmail.com",
+                "admin@mymemo.app",
                 "email sbuject",
                 "Hello Jhon"
         );

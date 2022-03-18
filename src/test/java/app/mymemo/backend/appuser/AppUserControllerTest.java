@@ -55,7 +55,7 @@ class AppUserControllerTest {
 
     @BeforeEach
     void setUp() {
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
         firstUser = new AppUser(
@@ -67,7 +67,7 @@ class AppUserControllerTest {
         );
         firstUser.setId(UUID.randomUUID().toString());
 
-        email = "janedoe@gmail.com";
+        email = "admin@mymemo.app";
         roles = new ArrayList<>();
         roles.add(AppUserRole.APP_ADMIN_ROLE);
 
@@ -107,7 +107,7 @@ class AppUserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].lastName").value("Doe"))
-                .andExpect(jsonPath("$[0].email").value("jhondoe@gmail.com"))
+                .andExpect(jsonPath("$[0].email").value("admin@mymemo.app"))
                 .andExpect(jsonPath("$[0].password").value("password"))
                 .andExpect(jsonPath("$[0].roles[0]").value("APP_USER_ROLE"))
                 .andExpect(jsonPath("$[0].enabled").value(false))
@@ -117,11 +117,11 @@ class AppUserControllerTest {
                 .andExpect(jsonPath("$[0].accountNonLocked").value(true))
                 .andExpect(jsonPath("$[0].accountEnabled").value(false))
                 .andExpect(jsonPath("$[0].authorities[0].authority").value("APP_USER_ROLE"))
-                .andExpect(jsonPath("$[0].username").value("jhondoe@gmail.com"))
+                .andExpect(jsonPath("$[0].username").value("admin@mymemo.app"))
 
                 .andExpect(jsonPath("$[1].firstName").value("Jane"))
                 .andExpect(jsonPath("$[1].lastName").value("Doe"))
-                .andExpect(jsonPath("$[1].email").value("janedoe@gmail.com"))
+                .andExpect(jsonPath("$[1].email").value("admin@mymemo.app"))
                 .andExpect(jsonPath("$[1].password").value("password"))
                 .andExpect(jsonPath("$[1].roles[0]").value("APP_ADMIN_ROLE"))
                 .andExpect(jsonPath("$[1].enabled").value(false))
@@ -131,7 +131,7 @@ class AppUserControllerTest {
                 .andExpect(jsonPath("$[1].accountNonLocked").value(true))
                 .andExpect(jsonPath("$[1].accountEnabled").value(false))
                 .andExpect(jsonPath("$[1].authorities[0].authority").value("APP_ADMIN_ROLE"))
-                .andExpect(jsonPath("$[1].username").value("janedoe@gmail.com"));
+                .andExpect(jsonPath("$[1].username").value("admin@mymemo.app"));
 
     }
 
@@ -149,7 +149,7 @@ class AppUserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
-                .andExpect(jsonPath("$.email").value("jhondoe@gmail.com"))
+                .andExpect(jsonPath("$.email").value("admin@mymemo.app"))
                 .andExpect(jsonPath("$.password").value("password"))
                 .andExpect(jsonPath("$.roles[0]").value("APP_USER_ROLE"))
                 .andExpect(jsonPath("$.enabled").value(false))
@@ -159,7 +159,7 @@ class AppUserControllerTest {
                 .andExpect(jsonPath("$.accountNonLocked").value(true))
                 .andExpect(jsonPath("$.accountEnabled").value(false))
                 .andExpect(jsonPath("$.authorities[0].authority").value("APP_USER_ROLE"))
-                .andExpect(jsonPath("$.username").value("jhondoe@gmail.com"));
+                .andExpect(jsonPath("$.username").value("admin@mymemo.app"));
 
         mockMvc.perform(get("/api/v1/users/" + secondUser.getId())
                         .accept(MediaType.APPLICATION_JSON))
@@ -167,7 +167,7 @@ class AppUserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName").value("Jane"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
-                .andExpect(jsonPath("$.email").value("janedoe@gmail.com"))
+                .andExpect(jsonPath("$.email").value("admin@mymemo.app"))
                 .andExpect(jsonPath("$.password").value("password"))
                 .andExpect(jsonPath("$.roles[0]").value("APP_ADMIN_ROLE"))
                 .andExpect(jsonPath("$.enabled").value(false))
@@ -177,7 +177,7 @@ class AppUserControllerTest {
                 .andExpect(jsonPath("$.accountNonLocked").value(true))
                 .andExpect(jsonPath("$.accountEnabled").value(false))
                 .andExpect(jsonPath("$.authorities[0].authority").value("APP_ADMIN_ROLE"))
-                .andExpect(jsonPath("$.username").value("janedoe@gmail.com"));
+                .andExpect(jsonPath("$.username").value("admin@mymemo.app"));
 
 //        verify(appUserService, times(2)).loadUserById(anyString());
     }
@@ -191,14 +191,14 @@ class AppUserControllerTest {
                 "\"id\": \"" + firstUser.getId()+ "\",\n" +
                 "    \"firstName\": \"J.James\",\n" +
                 "    \"lastName\": \"Doen\",\n" +
-                "    \"email\": \"jjdoen@gmail.com\",\n" +
+                "    \"email\": \"admin@mymemo.app\",\n" +
                 "    \"password\": \"password2\",\n" +
                 "    \"roles\": [\n" +
                 "        \"APP_USER_ROLE\"\n," +
                 "        \"APP_ADMIN_ROLE\"\n" +
                 "    ],\n" +
                 "    \"enabled\": true,\n" +
-                "    \"username\": \"jjdoen@gmail.com\"" +
+                "    \"username\": \"admin@mymemo.app\"" +
                 "}";
 
         mockMvc.perform(post(url)
@@ -210,7 +210,7 @@ class AppUserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName").value("J.James"))
                 .andExpect(jsonPath("$.lastName").value("Doen"))
-                .andExpect(jsonPath("$.email").value("jhondoe@gmail.com"))
+                .andExpect(jsonPath("$.email").value("admin@mymemo.app"))
                 .andExpect(jsonPath("$.password").value("password"))
                 .andExpect(jsonPath("$.roles[0]").value("APP_USER_ROLE"))
                 .andExpect(jsonPath("$.enabled").value(false))
@@ -220,7 +220,7 @@ class AppUserControllerTest {
                 .andExpect(jsonPath("$.accountNonLocked").value(true))
                 .andExpect(jsonPath("$.accountEnabled").value(false))
                 .andExpect(jsonPath("$.authorities[0].authority").value("APP_USER_ROLE"))
-                .andExpect(jsonPath("$.username").value("jhondoe@gmail.com"));
+                .andExpect(jsonPath("$.username").value("admin@mymemo.app"));
     }
 
     @Test
@@ -232,10 +232,10 @@ class AppUserControllerTest {
                 "\"id\": \"" + firstUser.getId()+ "\",\n" +
                 "    \"firstName\": \"J.James\",\n" +
                 "    \"lastName\": \"Doen\",\n" +
-                "    \"email\": \"jjdoen@gmail.com\",\n" +
+                "    \"email\": \"admin@mymemo.app\",\n" +
                 "    \"password\": \"password2\",\n" +
                 "    \"roleName\": \"APP_ADMIN_ROLE\",\n" +
-                "    \"username\": \"jhondoe@gmail.com\"" +
+                "    \"username\": \"admin@mymemo.app\"" +
                 "}";
 
         mockMvc.perform(post(url)

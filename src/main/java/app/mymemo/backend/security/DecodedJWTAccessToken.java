@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.Data;
 import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class DecodedJWTAccessToken {
 
     public DecodedJWTAccessToken(HttpServletRequest request,String secretKey) {
 
-        String requestHeader = request.getHeader("authorization");
+        String requestHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String authorizationToken = requestHeader.substring("Bearer ".length());
 
         DecodedJWT decodedJWT = getVerifiedDecodedJWT(authorizationToken, secretKey);
@@ -51,7 +52,9 @@ public class DecodedJWTAccessToken {
     }
 
     public static DecodedJWT getVerifiedDecodedJWT(String authorizationTokenHeader, String secretKey){
-        String[] authorizationTokenChunks = authorizationTokenHeader.split("\\.");
+        String tokenInHeader = authorizationTokenHeader.substring("Bearer ".length());
+
+        String[] authorizationTokenChunks = tokenInHeader.split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();
 
         String jwtHeader = new String(decoder.decode(authorizationTokenChunks[0]));
@@ -65,7 +68,7 @@ public class DecodedJWTAccessToken {
         );
 
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-        return jwtVerifier.verify(authorizationTokenHeader);
+        return jwtVerifier.verify(tokenInHeader);
     }
 
     private static Algorithm findJWTAlgorithm(String alg, String secretKey) {

@@ -28,7 +28,7 @@ class AppUserRepositoryTest {
     @Test
     void itShouldFindUserByEmail() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -51,7 +51,7 @@ class AppUserRepositoryTest {
     @Test
     void itShouldFindUserById() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -77,7 +77,7 @@ class AppUserRepositoryTest {
     @Test
     void itShouldNotFindUserByEmailWhenItDoesNotExist() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         // then
         AppUser dbUser = testRepository.findUserByEmail(email);
@@ -87,7 +87,7 @@ class AppUserRepositoryTest {
     @Test
     void itShouldNotFindUserByIdWhenItDoesNotExist() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);

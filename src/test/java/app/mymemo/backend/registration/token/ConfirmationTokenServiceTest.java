@@ -32,7 +32,7 @@ class ConfirmationTokenServiceTest {
                 confirmationTokenRepository
         );
 
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);

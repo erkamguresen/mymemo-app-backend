@@ -60,11 +60,12 @@ public class RegistrationService {
                 )
         );
 
-        emailSender.sendEmailConfirm(
-                request.getEmail(),
-                RegistrationConfirmEmail.buildRegistrationConfirmEmail(request.getFirstName(),
-                        environment.getProperty("web.mail.confirm-link") + token)
-                );
+        //TODO activate email
+//        emailSender.sendEmailConfirm(
+//                request.getEmail(),
+//                RegistrationConfirmEmail.buildRegistrationConfirmEmail(request.getFirstName(),
+//                        environment.getProperty("web.mail.confirm-link") + token)
+//                );
 
         return token;
     }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,7 @@ public class AppUserController {
             @PathVariable String id){
 
 //        Enumeration<String> token = request.getHeaderNames();
-        String token = request.getHeader("authorization");
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         return ResponseEntity.ok().body(userService.loadUserById(id));
     }

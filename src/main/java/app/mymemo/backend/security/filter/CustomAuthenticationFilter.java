@@ -108,7 +108,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withIssuer(request.getRequestURL().toString())
                 // here I used a more complex algorithm
 //                .sign(Algorithm.HMAC512(this.environment.getProperty("TOKEN_SECRET")));
-                .sign(Algorithm.HMAC512("TOKEN_SECRET"));
+                .sign(Algorithm.HMAC512(TOKEN_SECRET));
 
 /* //send in body instead of headers
         response.setHeader("access_token", access_token);

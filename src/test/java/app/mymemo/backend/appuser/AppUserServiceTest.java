@@ -47,7 +47,7 @@ class AppUserServiceTest {
     @Test
     void itShouldLoadUserByUsername() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -73,7 +73,7 @@ class AppUserServiceTest {
     @Test
     void itShouldLoadUserById() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -99,7 +99,7 @@ class AppUserServiceTest {
     @Test
     void itShouldEnableAppUser() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -134,7 +134,7 @@ class AppUserServiceTest {
     @Test
     void itShouldAddRoleToUser() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -171,7 +171,7 @@ class AppUserServiceTest {
     @Test
     void itShouldNotAddRoleToUserWhenItAlreadyHas() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -206,7 +206,7 @@ class AppUserServiceTest {
     @Test
     void itShouldThrowUnauthorizedRequestExceptionAddRoleToUser() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -245,7 +245,7 @@ class AppUserServiceTest {
     @Test
     void itShouldUpdateUser() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -289,7 +289,7 @@ class AppUserServiceTest {
 
         assertThat(user.getFirstName()).isEqualTo("it should update the firstname");
         assertThat(user.getLastName()).isEqualTo("it should update the lastname");
-        assertThat(user.getEmail()).isEqualTo("jhondoe@gmail.com");
+        assertThat(user.getEmail()).isEqualTo("admin@mymemo.app");
         assertThat(user.getPassword()).isEqualTo("password");
         assertThat(user.isAccountLocked()).isTrue();
         assertThat(user.isAccountEnabled()).isTrue();
@@ -298,7 +298,7 @@ class AppUserServiceTest {
     @Test
     void itShouldThrowUnauthorizedRequestExceptionUpdateUser() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);
@@ -339,7 +339,7 @@ class AppUserServiceTest {
 
         assertThat(user.getFirstName()).isEqualTo("John");
         assertThat(user.getLastName()).isEqualTo("Doe");
-        assertThat(user.getEmail()).isEqualTo("jhondoe@gmail.com");
+        assertThat(user.getEmail()).isEqualTo("admin@mymemo.app");
         assertThat(user.getPassword()).isEqualTo("password");
         assertThat(user.isAccountLocked()).isFalse();
         assertThat(user.isAccountEnabled()).isFalse();
@@ -348,7 +348,7 @@ class AppUserServiceTest {
     @Test
     void itShouldSignUpUser() {
         // given
-        String email = "jhondoe@gmail.com";
+        String email = "admin@mymemo.app";
 
         List<AppUserRole> roles = new ArrayList<>();
         roles.add(AppUserRole.APP_USER_ROLE);

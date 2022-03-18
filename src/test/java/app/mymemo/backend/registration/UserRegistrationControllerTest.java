@@ -49,7 +49,7 @@ class UserRegistrationControllerTest {
                         .content("{\n" +
                                 "    \"firstName\":\"jhon\",\n" +
                                 "    \"lastName\":\"doe\",\n" +
-                                "    \"email\":\"jhondoe@gmail.com\",\n" +
+                                "    \"email\":\"admin@mymemo.app\",\n" +
                                 "    \"password\":\"password\"\n" +
                                 "}"))
                 .andDo(print())
@@ -67,7 +67,7 @@ class UserRegistrationControllerTest {
                                 .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
-                                        "    \"email\":\"jhondoe@gmail.com\",\n" +
+                                        "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
                                         "}"))
                 .andDo(print())
@@ -80,7 +80,7 @@ class UserRegistrationControllerTest {
                                 .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
-                                        "    \"email\":\"jhondoe@gmail.com\",\n" +
+                                        "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password2\"\n" +
                                         "}"))
                 .andDo(print())
@@ -99,7 +99,7 @@ class UserRegistrationControllerTest {
                                 .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
-                                        "    \"email\":\"jhondoe@gmail.com\",\n" +
+                                        "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
                                         "}"))
                 .andExpect(status().isOk())
@@ -136,7 +136,7 @@ class UserRegistrationControllerTest {
                                 .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
-                                        "    \"email\":\"jhondoe@gmail.com\",\n" +
+                                        "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
                                         "}"))
                 .andExpect(status().isOk())
@@ -168,7 +168,7 @@ class UserRegistrationControllerTest {
                                 .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
-                                        "    \"email\":\"jhondoe@gmail.com\",\n" +
+                                        "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
                                         "}"))
                 .andExpect(status().isOk())
@@ -188,7 +188,7 @@ class UserRegistrationControllerTest {
                         .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
-                                        "    \"email\":\"jhondoe@gmail.com\",\n" +
+                                        "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
                                         "}")
                         .accept(MediaType.APPLICATION_JSON))
