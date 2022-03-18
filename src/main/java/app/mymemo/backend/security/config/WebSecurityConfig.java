@@ -35,15 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserDetailsService userDetailsService;
     private final Environment environment;
-//    private String TOKEN_SECRET;
-
-//    public WebSecurityConfig(AppUserService appUserService, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailsService, Environment environment) {
-//        this.appUserService = appUserService;
-//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//        this.userDetailsService = userDetailsService;
-//        this.environment = environment;
-//        this.TOKEN_SECRET = this.environment.getProperty("TOKEN_SECRET");
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -58,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
 
 
-        /**
+        /*
          * for JWT make the app stateless- normal spring app is session based
          * and uses cookies etc. to tract the user
          *
@@ -98,8 +89,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated();
 
         //Auth filter to check login
-//        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-// TODO
         http.addFilter(customAuthenticationFilter);
 
         // TODO use before to intercept every request
@@ -110,7 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         // here we pass de password encoder and userdetials service
         auth.authenticationProvider(daoAuthenticationProvider());
     }

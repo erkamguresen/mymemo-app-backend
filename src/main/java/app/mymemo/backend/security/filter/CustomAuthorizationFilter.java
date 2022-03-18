@@ -1,6 +1,6 @@
 package app.mymemo.backend.security.filter;
 
-import app.mymemo.backend.security.DecodedJWTAccessToken;
+import app.mymemo.backend.security.JWTTokenService;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -51,15 +51,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
         } else {
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
-//                String token = authorizationHeader.substring("Bearer ".length());
 
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
                 try {
-                    DecodedJWT decodedJWT = DecodedJWTAccessToken
-                            .getVerifiedDecodedJWT(
-                                    authorizationHeader,
-                                    this.TOKEN_SECRET
-                            );
+
+
+
+                    DecodedJWT decodedJWT = JWTTokenService.getVerifiedDecodedJWTFromHeader(
+                            authorizationHeader,
+                            TOKEN_SECRET);
 
                     String username = decodedJWT.getSubject();
                     // access the payload with key
@@ -82,15 +82,12 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     log.error("Error logging in with token: {}", e.getMessage());
                     response.setHeader("error", e.getMessage());
                     response.setStatus(HttpStatus.FORBIDDEN.value());
-//                    response.sendError(HttpStatus.FORBIDDEN.value());
 
                     Map<String, String> error = new HashMap<>();
                     error.put("error_message", e.getMessage());
 
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
-
-
                 }
             } else {
                 filterChain.doFilter(request,response);

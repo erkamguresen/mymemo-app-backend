@@ -1,0 +1,153 @@
+package app.mymemo.backend.security;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+/**
+ * Provides core JWT token decode methods and decoded tokens.
+ *
+ * Author: Erkam Guresen
+ */
+@Service
+@RequiredArgsConstructor
+public class JWTTokenService{
+
+    private final Environment environment;
+
+    /**
+     * Decodes Authorization Header containing a JWT.
+     * Uses a generic JWTVerifier to decode.
+     *
+     * @param authorizationTokenHeader Authorization Token Header containing "Bearer ".
+     * @return a decodedJWT if verified otherwise error.
+     */
+    public DecodedJWT getVerifiedDecodedJWTFromHeader(String authorizationTokenHeader){
+
+        String tokenInHeader = authorizationTokenHeader.substring("Bearer ".length());
+
+        return getVerifiedDecodedJWTFromToken(tokenInHeader);
+    }
+
+    /**
+     * Decodes a JWT using generic JWTVerifier.
+     * Uses a generic JWTVerifier to decode.
+     *
+     * @param token JWT token to be decoded and verified
+     *              (without header part "Bearer ").
+     * @return a decodedJWT if verified otherwise error.
+     */
+    public DecodedJWT getVerifiedDecodedJWTFromToken(String token){
+
+        String secretKey = this.environment.getProperty("TOKEN_SECRET");
+
+        return getVerifiedDecodedJWTFromToken(token, secretKey);
+    }
+
+    /**
+     * A static method to decode Authorization Header containing a JWT.
+     * Uses a generic JWTVerifier to decode.
+     *
+     * @param authorizationTokenHeader Authorization Token Header containing "Bearer ".
+     * @param secretKey secret key used to encode the JWT token itself.
+     * @return a decodedJWT if verified otherwise error.
+     */
+    public static DecodedJWT getVerifiedDecodedJWTFromHeader(
+            String authorizationTokenHeader, String secretKey){
+
+        String tokenInHeader = authorizationTokenHeader.substring("Bearer ".length());
+
+        return getVerifiedDecodedJWTFromToken(tokenInHeader, secretKey);
+    }
+
+    /**
+     * A static method to decode a JWT using generic JWTVerifier.
+     * Uses a generic JWTVerifier to decode.
+     *
+     * @param token JWT token to be decoded and verified
+     *              (without header part "Bearer ").
+     * @param secretKey secret key used to encode the JWT token itself.
+     * @return a decodedJWT if verified otherwise error.
+     */
+    public static DecodedJWT getVerifiedDecodedJWTFromToken(
+            String token, String secretKey){
+
+        String[] authorizationTokenChunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        String jwtHeader = new String(decoder.decode(authorizationTokenChunks[0]));
+
+        JSONObject jwtHeaderObject = new JSONObject(jwtHeader);
+
+        Algorithm algorithm = findJWTAlgorithm(
+                jwtHeaderObject.get("alg").toString(),
+                secretKey
+        );
+
+        JWTVerifier jwtVerifier = JWT.require(algorithm).build();
+        return jwtVerifier.verify(token);
+    }
+
+    /**
+     * Finds the algorithm that is used to encode the token. Then uses
+     * the secret to create te verification algorithm.
+     *
+     * @param alg name of the algorithm used in JWT token as presented in JWT token.
+     * @param secretKey secret key used to encode the JWT token itself.
+     * @return an algorithm, which is made from the algorithm type and the secret key,
+     *          that can verify the JWT token.
+     */
+    private static Algorithm findJWTAlgorithm(String alg, String secretKey) {
+        Algorithm algorithm;
+
+        switch (alg) {
+            case "HS256":
+            case "HMAC256":
+                algorithm = Algorithm.HMAC256(secretKey);
+                break;
+            case "HMAC512":
+            case "HS512":
+                algorithm = Algorithm.HMAC512(secretKey);
+                break;
+            case "HMAC384":
+            case "HS384":
+            default:
+                algorithm =Algorithm.HMAC384(secretKey);
+                break;
+        }
+        return  algorithm;
+    }
+
+    /**
+     * Decodes the id of AppUser form a HttpRequest.
+     *
+     * @param request HttpServletRequest to be searched for AppUser id.
+     * @return decoded id of the AppUSer from the JWT token.
+     */
+    public String getAppUserIdFromHttpRequest(HttpServletRequest request){
+        String tokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        return getAppUserIdFromAuthorizationHeader(tokenHeader);
+    }
+
+    /**
+     * Decodes the id of AppUser form an Authorization Header.
+     *
+     * @param authorizationHeader Authorization Token Header containing "Bearer ".
+     * @return decoded id of the AppUSer from the JWT token.
+     */
+    public String getAppUserIdFromAuthorizationHeader(String authorizationHeader){
+        DecodedJWT decodedJWT = getVerifiedDecodedJWTFromHeader(authorizationHeader);
+
+        return decodedJWT.getClaim("userId").asString();
+    }
+
+}

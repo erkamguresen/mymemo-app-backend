@@ -94,12 +94,6 @@ class AppUserControllerTest {
     @Test
 //    @Disabled
     void itCanGetAllUsers() throws Exception {
-        /*setup mock*/
-//        List<AppUser> users = new ArrayList<>();
-//        users.add(firstUser);
-//        users.add(secondUser);
-//
-//        when(appUserService.findAllUsers()).thenReturn(users);
 
         mockMvc.perform(get("/api/v1/users")
                         .accept(MediaType.APPLICATION_JSON))
@@ -138,9 +132,6 @@ class AppUserControllerTest {
     @Test
 //    @Disabled
     void itCanGetASpecificUser() throws Exception {
-        /*Setup mock*/
-//        when(appUserService.loadUserById(firstUser.getId())).thenReturn(firstUser);
-//        when(appUserService.loadUserById(secondUser.getId())).thenReturn(secondUser);
 
         mockMvc.perform(get("/api/v1/users/" + firstUser.getId())
                         .accept(MediaType.APPLICATION_JSON))
