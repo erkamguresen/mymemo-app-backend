@@ -27,6 +27,7 @@ public class AppUserController {
 
 	@GetMapping
     public ResponseEntity<List<AppUser>> getUsers(){
+        // TODO should only admin get this
 
         return ResponseEntity.ok().body(userService.findAllUsers());
     }
