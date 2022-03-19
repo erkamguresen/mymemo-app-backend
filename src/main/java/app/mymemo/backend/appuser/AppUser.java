@@ -148,8 +148,8 @@ public class AppUser implements UserDetails {
         // email and cannot be updated
 //        this.email = email;
 //        this.password = password;
-        //TODO check roles
-        this.roles = roles;
+        // TODO updating roles requires admin role so find another way
+//        this.roles = updatedUser.getRoles();
         this.isAccountLocked = !updatedUser.isAccountNonLocked();
         this.isAccountEnabled = updatedUser.isAccountEnabled();
     }

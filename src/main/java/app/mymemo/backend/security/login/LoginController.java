@@ -13,7 +13,7 @@ import java.io.IOException;
  * other features like refreshing access token or password recovery.
  */
 @RestController
-@RequestMapping(path = "api/v1/login")
+@RequestMapping(path = "/api/v1/login")
 @AllArgsConstructor
 public class LoginController {
     //TODO tests

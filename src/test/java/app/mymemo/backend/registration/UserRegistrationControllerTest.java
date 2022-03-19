@@ -44,10 +44,10 @@ class UserRegistrationControllerTest {
         //given
         String url = "http://localhost:" + port + "/api/v1/registration";
 
-       ResultActions resultActions = mockMvc.perform(
+       mockMvc.perform(
                 post(url).contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
-                                "    \"firstName\":\"jhon\",\n" +
+                                "    \"firstName\":\"john\",\n" +
                                 "    \"lastName\":\"doe\",\n" +
                                 "    \"email\":\"admin@mymemo.app\",\n" +
                                 "    \"password\":\"password\"\n" +
@@ -62,10 +62,10 @@ class UserRegistrationControllerTest {
         //given
         String url = "http://localhost:" + port + "/api/v1/registration";
 
-        ResultActions resultActions = mockMvc.perform(
+        mockMvc.perform(
                         post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content("{\n" +
-                                        "    \"firstName\":\"jhon\",\n" +
+                                        "    \"firstName\":\"john\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
                                         "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
@@ -78,7 +78,7 @@ class UserRegistrationControllerTest {
         mockMvc.perform(
                         post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content("{\n" +
-                                        "    \"firstName\":\"jhon\",\n" +
+                                        "    \"firstName\":\"john\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
                                         "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password2\"\n" +
@@ -97,7 +97,7 @@ class UserRegistrationControllerTest {
         ResultActions resultActions = mockMvc.perform(
                         post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content("{\n" +
-                                        "    \"firstName\":\"jhon\",\n" +
+                                        "    \"firstName\":\"john\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
                                         "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
@@ -134,7 +134,7 @@ class UserRegistrationControllerTest {
         ResultActions resultActions = mockMvc.perform(
                         post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content("{\n" +
-                                        "    \"firstName\":\"jhon\",\n" +
+                                        "    \"firstName\":\"john\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
                                         "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
@@ -166,7 +166,7 @@ class UserRegistrationControllerTest {
         ResultActions resultActions = mockMvc.perform(
                         post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content("{\n" +
-                                        "    \"firstName\":\"jhon\",\n" +
+                                        "    \"firstName\":\"john\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
                                         "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +
@@ -186,7 +186,7 @@ class UserRegistrationControllerTest {
         mockMvc.perform(post(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
-                                        "    \"firstName\":\"jhon\",\n" +
+                                        "    \"firstName\":\"john\",\n" +
                                         "    \"lastName\":\"doe\",\n" +
                                         "    \"email\":\"admin@mymemo.app\",\n" +
                                         "    \"password\":\"password\"\n" +

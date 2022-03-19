@@ -3,12 +3,10 @@ package app.mymemo.backend.security.login;
 import app.mymemo.backend.appuser.AppUser;
 import app.mymemo.backend.appuser.AppUserRepository;
 import app.mymemo.backend.appuser.AppUserRole;
-import app.mymemo.backend.appuser.AppUserService;
 import app.mymemo.backend.security.JWTTokenService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.assertj.core.api.Assertions;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -26,9 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.assertj.core.api.Fail.fail;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -44,7 +41,10 @@ class LoginServiceTest {
     private Environment environment;
 
     private String TOKEN_SECRET;
-    private String refreshToken1, refreshToken2, accessToken;
+    private String refreshToken1;
+    private String refreshToken1_expired;
+    private String refreshToken2;
+    private String accessToken;
 
     private AppUser user;
 
@@ -58,20 +58,20 @@ class LoginServiceTest {
         roles.add(AppUserRole.APP_PREMIUM_USER_ROLE);
 
         user = new AppUser(
-                "jhon",
+                "john",
                 "doe",
-                "jhondoe@mymemo.app",
+                "johndoe@mymemo.app",
                 "password",
                 roles
         );
 
         appUserRepository.save(user);
 
-        user = appUserRepository.findUserByEmail("jhondoe@mymemo.app");
+        user = appUserRepository.findUserByEmail("johndoe@mymemo.app");
 
         accessToken = JWT.create()
                 // use stg unique
-                .withSubject("jhondoe@mymemo.app")
+                .withSubject("johndoe@mymemo.app")
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60*60*1000))
                 .withIssuer("https://www.mymemo.app/api/v1/test")
                 .withClaim("roles",
@@ -81,8 +81,16 @@ class LoginServiceTest {
 
         refreshToken1 = JWT.create()
                 // use stg unique
-                .withSubject("jhondoe@mymemo.app")
+                .withSubject("johndoe@mymemo.app")
                 .withExpiresAt(new Date(System.currentTimeMillis() + 24*60*60*1000))
+                .withIssuer("https://www.mymemo.app/api/v1/test")
+                .withClaim("token-type","refresh token")
+                .sign(Algorithm.HMAC512(TOKEN_SECRET));
+
+        refreshToken1_expired = JWT.create()
+                // use stg unique
+                .withSubject("johndoe@mymemo.app")
+                .withExpiresAt(new Date(System.currentTimeMillis() - 1000))
                 .withIssuer("https://www.mymemo.app/api/v1/test")
                 .withClaim("token-type","refresh token")
                 .sign(Algorithm.HMAC512(TOKEN_SECRET));
@@ -128,7 +136,7 @@ class LoginServiceTest {
                 responseObject.get("access_token").toString());
 
         assertThat(decodedJWT1.getAlgorithm()).isEqualTo("HS256");
-        assertThat(decodedJWT1.getSubject()).isEqualTo("jhondoe@mymemo.app");
+        assertThat(decodedJWT1.getSubject()).isEqualTo("johndoe@mymemo.app");
         assertThat(decodedJWT1.getClaim("roles").toString())
                 .contains("APP_USER_ROLE");
         assertThat(decodedJWT1.getClaim("roles").toString())
@@ -146,8 +154,89 @@ class LoginServiceTest {
     }
 
     @Test
+    void throwsExceptionWhenAnExpiredRefreshTokenIsSend() throws IOException, JSONException {
+        //given
+        MockHttpServletRequest request = new MockHttpServletRequest(
+                "post",
+                "https://www.mymemo.app/api/v1/login/token/refresh");
+        request.addHeader("Authorization","Bearer " + refreshToken1_expired );
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        //when
+        loginService.refreshAccessTokenByRefreshToken(request, response);
+
+        //then
+        String responseContent = response.getContentAsString();
+
+        assertThat(response.getStatus()).isEqualTo(403);
+        assertThat(response.getContentType()).isEqualTo("application/json");
+
+        assertThat(responseContent).contains("The Token has expired on ");
+    }
+
+    @Test
+    void throwsExceptionWhenWrongRefreshTokenIsSend() throws IOException, JSONException {
+        //given
+        MockHttpServletRequest request = new MockHttpServletRequest(
+                "post",
+                "https://www.mymemo.app/api/v1/login/token/refresh");
+        request.addHeader("Authorization","Bearer " + refreshToken2 );
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        //when
+        loginService.refreshAccessTokenByRefreshToken(request, response);
+
+        //then
+        String responseContent = response.getContentAsString();
+
+        assertThat(response.getStatus()).isEqualTo(403);
+        assertThat(response.getContentType()).isEqualTo("application/json");
+
+        assertThat(responseContent).contains("User does not exist");
+    }
+
+    @Test
     void throwsExceptionWhenAnInvalidRefreshTokenIsSend() throws IOException, JSONException {
-        //TODO expired, access token, wrongrefresh
-        fail("not yet implemented.");
+        //given
+        MockHttpServletRequest request = new MockHttpServletRequest(
+                "post",
+                "https://www.mymemo.app/api/v1/login/token/refresh");
+        request.addHeader("Authorization", refreshToken1 );
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        //when
+
+        //then
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(()->{
+                    loginService.refreshAccessTokenByRefreshToken(
+                            request,
+                            response);
+                }).withMessage("Refresh Token is missing");
+    }
+
+    @Test
+    void throwsExceptionWhenAnAccessTokenIsSend() throws IOException, JSONException {
+        //given
+        MockHttpServletRequest request = new MockHttpServletRequest(
+                "post",
+                "https://www.mymemo.app/api/v1/login/token/refresh");
+        request.addHeader("Authorization","Bearer " + accessToken );
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        //when
+        loginService.refreshAccessTokenByRefreshToken(request, response);
+
+        //then
+        String responseContent = response.getContentAsString();
+
+        assertThat(response.getStatus()).isEqualTo(403);
+        assertThat(response.getContentType()).isEqualTo("application/json");
+
+        assertThat(responseContent).contains("Refresh Token is missing");
     }
 }

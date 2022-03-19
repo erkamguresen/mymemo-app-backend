@@ -2,9 +2,8 @@ package app.mymemo.backend.security.login;
 
 import app.mymemo.backend.appuser.AppUser;
 import app.mymemo.backend.appuser.AppUserService;
+import app.mymemo.backend.exception.BadRequestException;
 import app.mymemo.backend.security.JWTTokenService;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +11,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +44,6 @@ public class LoginService {
             String refresh_token = authorizationHeader.substring("Bearer ".length());
 
             try {
-                String secretKey = this.environment.getProperty("TOKEN_SECRET");
 
                 DecodedJWT decodedJWT =
                         jwtTokenService.getVerifiedDecodedJWTFromHeader(authorizationHeader);
@@ -60,6 +55,9 @@ public class LoginService {
 
                 //find user in the DB
                 AppUser appUser = (AppUser) userService.loadUserByUsername(username);
+
+                if (appUser == null)
+                    throw new BadRequestException("User does not exist");
 
                 String access_token = jwtTokenService.createAccessToken(
                         appUser,

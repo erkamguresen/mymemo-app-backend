@@ -154,10 +154,12 @@ public class JWTTokenService{
     }
 
     /**
+     * Creates an access token for the AppUser. It will be valid for 30 min.
+     * It contains userId and user roles as extra claims.
      *
-     * @param appUser
-     * @param issuer
-     * @return
+     * @param appUser the app user for whom the access wil be created.
+     * @param issuer the url of the token requester.
+     * @return an access token for the given app user.
      */
     public String createAccessToken(AppUser appUser, String issuer){
         return JWT.create()
@@ -173,10 +175,15 @@ public class JWTTokenService{
     }
 
     /**
+     * Creates a refresh token for the AppUser. It will be valid for 1 day.
+     * It will be used to update the access token.
      *
-     * @param appUser
-     * @param issuer
-     * @return
+     * It contains "token-type" as an extra claim. This claim will be required
+     * to refresh access tokens.
+     *
+     * @param appUser the app user for whom the access wil be created.
+     * @param issuer the url of the token requester.
+     * @return a refresh token for the given app user.
      */
     public String createRefreshToken(AppUser appUser, String issuer){
         return JWT.create()
