@@ -1,6 +1,7 @@
 package app.mymemo.backend.security.config;
 
 import app.mymemo.backend.appuser.AppUserService;
+import app.mymemo.backend.security.JWTTokenService;
 import app.mymemo.backend.security.filter.CustomAuthenticationFilter;
 import app.mymemo.backend.security.filter.CustomAuthorizationFilter;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -33,7 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final UserDetailsService userDetailsService;
     private final Environment environment;
 
     @Override
@@ -44,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter customAuthenticationFilter =
                 new CustomAuthenticationFilter(
                         authenticationManagerBean(),
-                        this.environment.getProperty("TOKEN_SECRET"));
+                        new JWTTokenService(environment));
 
         customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
 

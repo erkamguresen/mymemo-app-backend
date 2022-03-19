@@ -137,6 +137,10 @@ public class AppUser implements UserDetails {
         return isAccountEnabled;
     }
 
+    /**
+     *
+     * @param updatedUser
+     */
     public void updateAllowedPartsFromUserObject(AppUser updatedUser){
 
         this.firstName = updatedUser.getFirstName();

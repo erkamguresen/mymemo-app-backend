@@ -60,7 +60,7 @@ public class RegistrationService {
                 )
         );
 
-        //TODO activate email
+        //TODO change test to mock
 //        emailSender.sendEmailConfirm(
 //                request.getEmail(),
 //                RegistrationConfirmEmail.buildRegistrationConfirmEmail(request.getFirstName(),
@@ -74,7 +74,7 @@ public class RegistrationService {
      * Confirms that an app user has access to the registered email account.
      * @param token unique token to confirm the email address.
      * @return "confirmed" if token is valid.
-     * @throws BadRequestException
+     * @throws BadRequestException if token cannot be confirmed
      */
     @Transactional
     public String confirmToken(String token) throws BadRequestException{
@@ -105,7 +105,6 @@ public class RegistrationService {
         confirmationTokenService.setConfirmedAt(confirmationToken);
 
         return "confirmed";
-
     }
 
 

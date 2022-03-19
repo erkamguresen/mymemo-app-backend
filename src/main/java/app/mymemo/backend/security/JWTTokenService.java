@@ -1,5 +1,6 @@
 package app.mymemo.backend.security;
 
+import app.mymemo.backend.appuser.AppUser;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -8,9 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Provides core JWT token decode methods and decoded tokens.
@@ -150,4 +153,40 @@ public class JWTTokenService{
         return decodedJWT.getClaim("userId").asString();
     }
 
+    /**
+     *
+     * @param appUser
+     * @param issuer
+     * @return
+     */
+    public String createAccessToken(AppUser appUser, String issuer){
+        return JWT.create()
+                .withSubject(appUser.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withIssuer(issuer)
+                .withClaim("roles",
+                        appUser.getAuthorities().stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
+                .withClaim("userId",appUser.getId())
+                .sign(Algorithm.HMAC256(this.environment.getProperty("TOKEN_SECRET")));
+    }
+
+    /**
+     *
+     * @param appUser
+     * @param issuer
+     * @return
+     */
+    public String createRefreshToken(AppUser appUser, String issuer){
+        return JWT.create()
+                // use stg unique
+                .withSubject(appUser.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 24*60*60*1000))
+                .withIssuer(issuer)
+                // add a claim to differentiate with access token
+                .withClaim("token-type","refresh token")
+                // here I used a more complex algorithm
+                .sign(Algorithm.HMAC512(this.environment.getProperty("TOKEN_SECRET")));
+    }
 }

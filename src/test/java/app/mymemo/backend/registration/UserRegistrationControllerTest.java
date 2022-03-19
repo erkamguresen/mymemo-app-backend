@@ -75,7 +75,7 @@ class UserRegistrationControllerTest {
                 .andExpect(content().contentType("text/plain;charset=UTF-8"));
 
         //then
-        resultActions = mockMvc.perform(
+        mockMvc.perform(
                         post(url).contentType(MediaType.APPLICATION_JSON)
                                 .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +
@@ -183,7 +183,7 @@ class UserRegistrationControllerTest {
                 .andExpect(content().string("confirmed"));
 
         // then
-        resultActions = mockMvc.perform(post(url)
+        mockMvc.perform(post(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                         "    \"firstName\":\"jhon\",\n" +

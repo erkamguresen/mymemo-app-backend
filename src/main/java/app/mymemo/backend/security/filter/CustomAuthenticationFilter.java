@@ -1,6 +1,7 @@
 package app.mymemo.backend.security.filter;
 
 import app.mymemo.backend.appuser.AppUser;
+import app.mymemo.backend.security.JWTTokenService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter  {
     private final AuthenticationManager authenticationManager;
-    private final String TOKEN_SECRET;
+    private final JWTTokenService jwtTokenService;
 
     /**
      * Performs actual authentication.
@@ -82,27 +83,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         AppUser user = (AppUser) authentication.getPrincipal();
 
-        Algorithm algorithm = Algorithm.HMAC256(this.TOKEN_SECRET);
+        String access_token = jwtTokenService.createAccessToken(
+                user,
+                request.getRequestURL().toString());
 
-        String access_token = JWT.create()
-                // use stg unique
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 60*60*1000))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles",
-                        user.getAuthorities().stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .withClaim("userId",user.getId())
-                .sign(algorithm);
-
-        String refresh_token = JWT.create()
-                // use stg unique
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 24*60*60*1000))
-                .withIssuer(request.getRequestURL().toString())
-                // here I used a more complex algorithm
-                .sign(Algorithm.HMAC512(TOKEN_SECRET));
+        String refresh_token = jwtTokenService.createRefreshToken(
+                user,
+                request.getRequestURL().toString());
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);

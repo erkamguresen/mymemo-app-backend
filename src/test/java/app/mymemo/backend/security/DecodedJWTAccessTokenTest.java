@@ -33,6 +33,7 @@ class DecodedJWTAccessTokenTest {
                 .withSubject("janedoe@mymemo.app")
                 .withExpiresAt(new Date(System.currentTimeMillis() + 24*60*60*1000))
                 .withIssuer("https://www.mymemo.app/api/v1/test")
+                .withClaim("token-type","refresh token")
                 // here I used a more complex algorithm
                 .sign(Algorithm.HMAC512(TOKEN_SECRET));
     }
@@ -75,6 +76,8 @@ class DecodedJWTAccessTokenTest {
         assertThat(decodedJWT2.getSubject()).isEqualTo("janedoe@mymemo.app");
         // to avoid environment problems use only the extension
         assertThat(decodedJWT2.getIssuer()).contains("https://www.mymemo.app/api/v1/test");
+        assertThat(decodedJWT2.getClaim("token-type").asString())
+                .isEqualTo("refresh token");
         assertThat(decodedJWT2.getExpiresAt())
                 .isAfterOrEqualTo(new Date(System.currentTimeMillis()))
                 .isBefore(
@@ -117,6 +120,8 @@ class DecodedJWTAccessTokenTest {
         assertThat(decodedJWT2.getSubject()).isEqualTo("janedoe@mymemo.app");
         // to avoid environment problems use only the extension
         assertThat(decodedJWT2.getIssuer()).contains("https://www.mymemo.app/api/v1/test");
+        assertThat(decodedJWT2.getClaim("token-type").asString())
+                .isEqualTo("refresh token");
         assertThat(decodedJWT2.getExpiresAt())
                 .isAfterOrEqualTo(new Date(System.currentTimeMillis()))
                 .isBefore(

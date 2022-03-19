@@ -53,20 +53,17 @@ public class LoginService {
                 DecodedJWT decodedJWT =
                         jwtTokenService.getVerifiedDecodedJWTFromHeader(authorizationHeader);
 
+                if (!"refresh token".equals(decodedJWT.getClaim("token-type").asString()))
+                    throw new RuntimeException("Refresh Token is missing");
+
                 String username = decodedJWT.getSubject();
 
                 //find user in the DB
                 AppUser appUser = (AppUser) userService.loadUserByUsername(username);
 
-                String access_token = JWT.create()
-                        .withSubject(appUser.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-                        .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles",
-                                appUser.getAuthorities().stream()
-                                        .map(GrantedAuthority::getAuthority)
-                                        .collect(Collectors.toList()))
-                        .sign(Algorithm.HMAC256(secretKey));
+                String access_token = jwtTokenService.createAccessToken(
+                        appUser,
+                        request.getRequestURL().toString() );
 
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);
