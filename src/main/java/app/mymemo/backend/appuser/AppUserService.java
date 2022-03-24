@@ -1,4 +1,208 @@
 package app.mymemo.backend.appuser;
 
-public class AppUserService {
+import app.mymemo.backend.exception.BadRequestException;
+import app.mymemo.backend.exception.UnauthorizedRequestException;
+import app.mymemo.backend.registration.token.ConfirmationToken;
+import app.mymemo.backend.registration.token.ConfirmationTokenService;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Provides core user service.
+ *
+ * Author: Erkam Guresen
+ */
+@Service
+@RequiredArgsConstructor
+public class AppUserService implements UserDetailsService {
+
+    private static String USER_NOT_FOUND_MESSAGE =
+            "User with email %s is not found";
+
+    @NonNull
+    private final AppUserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ConfirmationTokenService confirmationTokenService;
+
+    /**
+     * Locates the user based on the email. In this implementation,
+     * all email strings must be lowercase.
+     * @param email the EMAIL identifying the user whose data is required.
+     * @return a fully populated user record (never null)
+     * @throws UsernameNotFoundException  if the user could not be found
+     */
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        try {
+           return userRepository.findUserByEmail(email);
+        } catch (Exception e){
+            throw new UsernameNotFoundException(
+                    String.format(USER_NOT_FOUND_MESSAGE,email) );
+        }
+    }
+    
+    /**
+     * Locates the user based on the id. 
+     * @param id the id of the user whose data is required.
+     * @return a fully populated user record (never null)
+     * @throws UsernameNotFoundException  if the user could not be found
+     */
+    public UserDetails loadUserById(String id) throws UsernameNotFoundException {
+        try {
+           return userRepository.findUserById(id);
+        } catch (Exception e){
+            throw new UsernameNotFoundException(
+                    String.format(USER_NOT_FOUND_MESSAGE,id) );
+        }
+    }
+
+    /**
+     * Enables the account of the AppUser.
+     * @param appUser the app user record
+     * @return the saved user record (never null)
+     */
+    public AppUser enableAppUser(AppUser appUser){
+        //TODO do not return password ? check controller
+
+        appUser.setAccountEnabled(true);
+
+        return userRepository.save(appUser);
+    }
+
+    /**
+     * Returns the list of the current app users.
+     * @return a list containing all app users or an empty list if there is no registered user
+     */
+    public List<AppUser> findAllUsers(){
+
+        List<AppUser> result = new ArrayList<>();
+
+        userRepository.findAll().forEach(result::add);
+
+        return result;
+    }
+
+    /**
+     * Adds a new role to the app user.
+     * @param email the email of the app user
+     * @param roleName name of the new role
+     * @throws UsernameNotFoundException  if the user could not be found
+     */
+    public void addRoleToUser(String id, String email, String roleName) throws UsernameNotFoundException {
+
+        AppUser user = userRepository.findUserByEmail(email);
+
+        if (!user.getId().contentEquals(id))
+            throw new UnauthorizedRequestException();
+
+        AppUserRole role = Enum.valueOf(AppUserRole.class, roleName);
+
+        if (!user.getRoles().contains(role)) {
+        	user.getRoles().add(role);
+	        userRepository.save(user);
+		}
+    }
+
+    /**
+     * Saves the new details of the existing user
+     * @param id user id from path
+     * @param user app user from request body
+     * @return updated app user entity
+     */
+    public AppUser updateUser(String id, AppUser user){
+        // TODO check authorization wrt JWT
+        // TODO check id in the uri and the token id
+        if (!user.getId().contentEquals(id))
+            throw new UnauthorizedRequestException();
+
+        AppUser existingUser = userRepository.findUserById(id);
+
+        if (existingUser == null)
+            throw new BadRequestException("User does not exist.");
+
+        existingUser.updateAllowedPartsFromUserObject(user);
+
+        // TODO do not return the unnecessary details (password etc.)
+        return userRepository.save(existingUser);
+    }
+
+    /**
+     * Checks existing users and if the user does not exist creates a new user entity
+     * @param appUser signup details of new user creation request
+     * @return a confirmation token of registration
+     */
+    public String signUpUser(AppUser appUser){
+        AppUser user = userRepository.findUserByEmail(appUser.getEmail());
+
+
+        if (user != null ){
+            if (user.isAccountEnabled()){
+                throw new BadRequestException("Email is already registered.");
+
+            } else {
+                /*
+                * if the user registered but not activated (enabled the account
+                * by clicking the link in the confirmation email) the account
+                */
+                String encodedPassword =
+                        bCryptPasswordEncoder.encode(appUser.getPassword());
+
+                user.setPassword(encodedPassword);
+                userRepository.save(user);
+
+                String token = UUID.randomUUID().toString();
+
+                confirmationTokenService
+                        .saveConfirmationToken(getConfirmationToken(token, user));
+
+                return token;
+            }
+        }
+
+        // here is de encoded password
+        String encodedPassword =
+                bCryptPasswordEncoder.encode(appUser.getPassword());
+
+        appUser.setPassword(encodedPassword);
+        userRepository.save(appUser);
+
+        String token = UUID.randomUUID().toString();
+
+        confirmationTokenService
+                .saveConfirmationToken(getConfirmationToken(token, appUser));
+
+        return token;
+
+    }
+
+    /**
+     * Takes a token string and returns a confirmation token which will expire
+     * in 15 minutes.
+     *
+     * @param token token to be used in confirmation token
+     * @param appUser the user for whom the token will be created.
+     * @return a confirmation token which will expire in 15 minutes
+     */
+    private ConfirmationToken getConfirmationToken(String token, AppUser appUser){
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                appUser
+        );
+
+        return confirmationToken;
+    }
 }

@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### API KEYS ###
+#!**/src/main/resources/application.properties
+#/src/main/resources/application.properties
