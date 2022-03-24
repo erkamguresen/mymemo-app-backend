@@ -2,11 +2,9 @@ package app.mymemo.backend.appuser;
 
 import app.mymemo.backend.exception.UnauthorizedRequestException;
 import app.mymemo.backend.security.JWTTokenService;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;

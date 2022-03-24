@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -69,17 +70,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
 
         http.authorizeRequests()
-                .antMatchers(GET, "/api/v1/users/**")
+                .antMatchers("/api/v1/users/**")
                 .hasAnyAuthority("APP_USER_ROLE");
+
+        /*
+         * guest users can only get the deck but cannot create or change
+         * unless their email, which is used as Id for guests, has the privileges.
+         */
+        http.authorizeRequests()
+                .antMatchers( GET, "/api/v1/flash-card-deck/**")
+                .hasAnyAuthority("APP_GUEST_USER_ROLE", "APP_USER_ROLE");
+
+        http.authorizeRequests()
+                .antMatchers( POST, "/api/v1/flash-card-deck/**")
+                .hasAnyAuthority( "APP_GUEST_USER_ROLE","APP_USER_ROLE");
+
+        // progress of the guest users cannot be saved.
+        http.authorizeRequests()
+                .antMatchers(  "/api/v1/user-progress/**")
+                .hasAnyAuthority( "APP_USER_ROLE");
 
         // TODO for role based authorization prepare appAdmin service & routes
         http.authorizeRequests()
-                .antMatchers(POST, "/api/v1/admin/**")
+                .antMatchers( "/api/v1/admin/**")
                 .hasAnyAuthority("APP_ADMIN_ROLE");
 
         // TODO for role based authorization prepare appSuperAdmin service & routes
         http.authorizeRequests()
-                .antMatchers(POST, "/api/v1/super-admin/**")
+                .antMatchers("/api/v1/super-admin/**")
                 .hasAnyAuthority("APP_SUPER_ADMIN_ROLE");
 
         // Allow everyone to access this app

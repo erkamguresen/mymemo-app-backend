@@ -3,8 +3,6 @@ package app.mymemo.backend.appuser;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
-
 /**
  * Provides core user interface for database connection.
  *
